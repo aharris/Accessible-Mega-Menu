@@ -472,18 +472,22 @@ limitations under the License.
                 break;
             case Keyboard.UP:
                 event.preventDefault();
-                if (isTopNavItem && target.hasClass(settings.openClass)) {
-                    _togglePanel.call(that, event, true);
-                    next = topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last');
-                    if (next.children('.' + settings.panelClass).length) {
-                        found = (next.children()
-                            .attr('aria-expanded', 'true')
-                            .addClass(settings.openClass)
-                            .filter('.' + settings.panelClass)
-                            .attr('aria-hidden', 'false')
-                            .find(':tabbable:last')
-                            .focus() === 1);
-                    }
+                if (isTopNavItem) {
+                    if (settings.verticalTopNav) {
+                        found = (topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last').find(':tabbable:first').focus().length === 1);
+                    } else {
+                        _togglePanel.call(that, event, true);
+                        next = topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last');
+                        if (next.children('.' + settings.panelClass).length) {
+                            found = (next.children()
+                                .attr('aria-expanded', 'true')
+                                .addClass(settings.openClass)
+                                .filter('.' + settings.panelClass)
+                                .attr('aria-hidden', 'false')
+                                .find(':tabbable:last')
+                                .focus() === 1);
+                        }                    }
+
                 } else if (!isTopNavItem) {
                     found = (tabbables.filter(':lt(' + tabbables.index(target) + '):last').focus().length === 1);
                 }
@@ -517,7 +521,21 @@ limitations under the License.
             case Keyboard.LEFT:
                 event.preventDefault();
                 if (isTopNavItem) {
-                    found = (topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last').find(':tabbable:first').focus().length === 1);
+                    if (settings.verticalTopNav) {
+                        _togglePanel.call(that, event, true);
+                        next = topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last');
+                        if (next.children('.' + settings.panelClass).length) {
+                            found = (next.children()
+                                .attr('aria-expanded', 'true')
+                                .addClass(settings.openClass)
+                                .filter('.' + settings.panelClass)
+                                .attr('aria-hidden', 'false')
+                                .find(':tabbable:last')
+                                .focus() === 1);
+                        }
+                    } else {
+                        found = (topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last').find(':tabbable:first').focus().length === 1);
+                    }
                 } else {
                     if (panelGroups.length && currentPanelGroup.length) {
                         // if the current panel contains panel groups, and we are able to focus the first tabbable element of the previous panel group
