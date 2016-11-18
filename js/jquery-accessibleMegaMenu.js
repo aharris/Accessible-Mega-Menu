@@ -55,7 +55,8 @@ limitations under the License.
             panelGroupClass: "accessible-megamenu-panel-group", // default css class for a group of items within a megamenu panel
             hoverClass: "hover", // default css class for the hover state
             focusClass: "focus", // default css class for the focus state
-            openClass: "open" // default css class for the open state
+            openClass: "open", // default css class for the open state
+            verticalTopNav: false // Direction of the top nav item: default false
         },
         Keyboard = {
             BACKSPACE: 8,
@@ -453,8 +454,12 @@ limitations under the License.
             case Keyboard.DOWN:
                 event.preventDefault();
                 if (isTopNavItem) {
-                    _togglePanel.call(that, event);
-                    found = (topli.find('.' + settings.panelClass + ' :tabbable:first').focus().length === 1);
+                    if (settings.verticalTopNav) {
+                        found = (topnavitems.filter(':gt(' + topnavitems.index(topli) + '):first').find(':tabbable:first').focus().length === 1);
+                    } else {
+                        _togglePanel.call(that, event);
+                        found = (topli.find('.' + settings.panelClass + ' :tabbable:first').focus().length === 1);
+                    }
                 } else {
                     found = (tabbables.filter(':gt(' + tabbables.index(target) + '):first').focus().length === 1);
                 }
@@ -492,7 +497,12 @@ limitations under the License.
             case Keyboard.RIGHT:
                 event.preventDefault();
                 if (isTopNavItem) {
-                    found = (topnavitems.filter(':gt(' + topnavitems.index(topli) + '):first').find(':tabbable:first').focus().length === 1);
+                    if (settings.verticalTopNav) {
+                        _togglePanel.call(that, event);
+                        found = (topli.find('.' + settings.panelClass + ' :tabbable:first').focus().length === 1);
+                    } else {
+                        found = (topnavitems.filter(':gt(' + topnavitems.index(topli) + '):first').find(':tabbable:first').focus().length === 1);
+                    }
                 } else {
                     if (panelGroups.length && currentPanelGroup.length) {
                         // if the current panel contains panel groups, and we are able to focus the first tabbable element of the next panel group
